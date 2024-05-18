@@ -2,11 +2,11 @@
 function applyStylesToPublications() {
     const publications = document.querySelectorAll('[class="gsc_a_tr"]');
     var pageAuthor = document.querySelector('#gsc_prf_in').textContent.trim().split(" ");
-    pageAuthorSurname = pageAuthor[pageAuthor.length - 1];
+    pageAuthorSurname = pageAuthor[pageAuthor.length - 1].replace(/[^\w\s]/gi, '');
     publications.forEach(function(pub) {
         var authorsList = pub.querySelector('.gs_gray').textContent;
-        const coauthor = (name) => name.includes(pageAuthorSurname.concat("*"));
-        if (authorsList.split(",")[0].includes(pageAuthorSurname) || authorsList.split(",").some(coauthor)) {
+        const coauthor = (name) => name.substring(0, name.length - 1).replace(/[^\w\s]/gi, '').concat(name[-1]).includes(pageAuthorSurname.concat("*"));
+        if (authorsList.split(",")[0].replace(/[^\w\s]/gi, '').includes(pageAuthorSurname) || authorsList.split(",").some(coauthor)) {
             // pub.style.backgroundColor = '#F5F38D !important'
             // pub.style.setProperty('background-color', '#FFFCAE', 'important');
             var nodes = pub.childNodes;
