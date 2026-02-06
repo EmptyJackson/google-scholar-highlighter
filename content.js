@@ -14,7 +14,9 @@ function applyStylesToPublications() {
     pageAuthorSurname = pageAuthor[pageAuthor.length - 1].replace(/[^\w\s]/gi, '');
     publications.forEach(function(pub) {
         var isFirstAuthor = false;
-        var authorsList = pub.querySelector('.gs_gray').textContent.split(",");
+        var isLastAuthor = false;
+        var authorsText = pub.querySelector('.gs_gray').textContent;
+        var authorsList = authorsText.split(",");
         var firstAuthors = authorsList.filter((name) => name.includes('*'))
         firstAuthors = firstAuthors.map((name) => name.replace('*', ''))
         firstAuthors.push(authorsList[0].replace('*', ''))
@@ -32,12 +34,23 @@ function applyStylesToPublications() {
             // At most one raw surname match, check first authors contains surname
             isFirstAuthor = firstAuthors.some(surnameMatches);
         }
-        // Update styling if first author
-        if (isFirstAuthor) {
+        // Check for last author (only if author list is not truncated)
+        if (!authorsText.includes('…') && !authorsText.includes('...')) {
+            var lastAuthor = authorsList[authorsList.length - 1].replace('*', '');
+            if (authorsList.map(surnameMatches).filter(Boolean).length > 1) {
+                isLastAuthor = surnameMatches(lastAuthor)
+                    && lastAuthor.trim().substring(0, pageAuthorInitials.length) == pageAuthorInitials;
+            } else {
+                isLastAuthor = surnameMatches(lastAuthor);
+            }
+        }
+        // Update styling: first author (yellow) takes precedence over last author (blue)
+        if (isFirstAuthor || isLastAuthor) {
+            var color = isFirstAuthor ? '#FFFCAE' : '#DEEEFB';
             var nodes = pub.childNodes;
             for(var i=0; i<nodes.length; i++) {
                 if (nodes[i].nodeName.toLowerCase() == 'td') {
-                    nodes[i].style.background = '#FFFCAE';
+                    nodes[i].style.background = color;
                 }
             }
         }
