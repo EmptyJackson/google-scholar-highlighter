@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "Scholar Highlights",
-  "version": "1.2",
-  "description": "Highlights first (and co-first) author publications on Google Scholar.",
+  "version": "1.3",
+  "description": "Highlights first, co-first, and last author publications on Google Scholar.",
   "content_scripts": [
     {
         "matches": [
